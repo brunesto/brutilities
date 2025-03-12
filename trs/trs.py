@@ -60,6 +60,6 @@ if __name__ == "__main__":
         value = codecs.decode(rs[i + 1], "unicode_escape")
 
         replacements[key] = value
-        print("replace " + repr(key) + " by " + repr(value) + "")
+        #print("replace " + repr(key) + " by " + repr(value) + "")
 
     tr_strings_stream(sys.stdin, sys.stdout, replacements)
