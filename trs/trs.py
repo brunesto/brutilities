@@ -2,8 +2,8 @@
 #
 # GPL v3 licence
 #
-# this script is similar to tr but it replace strings instead of single characters
-# it is meant to be used on very large files
+# this script is similar to tr but it replaces strings instead of single characters
+# it is meant to be used on large files
 #
 # example to reformat a osm xml file so that each element has its own line:
 # ./trs.py "\n" "" "<way" "\n<way " "<relation" "\n<relation " "<node" "\n<node "
@@ -50,13 +50,6 @@ if __name__ == "__main__":
         print("Usage: " + sys.argv[0] + " old1 new1 old2 new2 ...")
         sys.exit(1)
 
-    # input_file = sys.argv[1]
-    # output_file = sys.argv[2]
-    # rs=sys.argv[3:]
-
-    # input_file = "andorra-latest.xml"
-    # output_file = "b"
-
     rs = sys.argv[1:]
     replacements = {}
 
@@ -70,6 +63,3 @@ if __name__ == "__main__":
         print("replace " + repr(key) + " by " + repr(value) + "")
 
     tr_strings_stream(sys.stdin, sys.stdout, replacements)
-
-    # with open(input_file, 'r', encoding='utf-8') as infile, open(output_file, 'w', encoding='utf-8') as outfile:
-    #    tr_strings_stream(input_file, output_file, replacements)
