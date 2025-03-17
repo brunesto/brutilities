@@ -12,7 +12,7 @@ import sys
 import codecs
 
 
-def tr_strings_stream(infile, outfile, replacements, buffer_size=1024):
+def tr_strings_stream(infile, outfile, replacements, buffer_size=32768):
     buffer = ""
     max_key_len = max(len(key) for key in replacements) if replacements else 1
 
@@ -23,25 +23,26 @@ def tr_strings_stream(infile, outfile, replacements, buffer_size=1024):
 
         buffer += chunk  # Append to buffer
 
+        
+        # Replace substrings
+        # new_text = buffer
+        for old, new in replacements.items():
+            buffer = buffer.replace(old, new)
+
+        # buffer=new_text
+
         # Process only up to a safe margin
         process_upto = len(buffer) - max_key_len
         if process_upto <= 0:
             continue  # Not enough data to process
 
-        # Replace substrings
-        new_text = buffer[:process_upto]
-        for old, new in replacements.items():
-            new_text = new_text.replace(old, new)
 
         # Write processed text to output
-        outfile.write(new_text)
+        outfile.write(buffer[:process_upto])
 
         # Keep the remainder as buffer for next iteration
         buffer = buffer[process_upto:]
 
-    # Final processing for leftover buffer
-    for old, new in replacements.items():
-        buffer = buffer.replace(old, new)
     outfile.write(buffer)  # Write final part
 
 
