@@ -12,37 +12,40 @@ import sys
 import codecs
 
 
-def tr_strings_stream(infile, outfile, replacements, buffer_size=32768):
+def tr_strings_stream(infile, outfile, replacements, buffer_size=64000):
     buffer = ""
     max_key_len = max(len(key) for key in replacements) if replacements else 1
-
+    r=0
+    w=0
     while True:
         chunk = infile.read(buffer_size)
         if not chunk:
             break  # End of file
 
+        r+=len(chunk)
         buffer += chunk  # Append to buffer
 
         
         # Replace substrings
-        # new_text = buffer
         for old, new in replacements.items():
             buffer = buffer.replace(old, new)
 
-        # buffer=new_text
-
-        # Process only up to a safe margin
+        # compute margin
         process_upto = len(buffer) - max_key_len
         if process_upto <= 0:
-            continue  # Not enough data to process
-
+            continue  # Not enough data left inside the buffer to produce output now
 
         # Write processed text to output
         outfile.write(buffer[:process_upto])
 
-        # Keep the remainder as buffer for next iteration
+        # Keep the remainder into buffer for next iteration
         buffer = buffer[process_upto:]
+        w+=process_upto
+        print("r:%d mb w:%d mb",  int(r/(1024*1024)),int(w/(1024*1024)),file=sys.stderr,end='\r')
 
+
+    w+=len(buffer)
+    
     outfile.write(buffer)  # Write final part
 
 
